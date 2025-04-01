@@ -1,5 +1,3 @@
---!nocheck
---!nolint
 --!nolint
 --!nocheck
 local assert = assert
@@ -47,6 +45,39 @@ if LPH_OBFUSCATED == nil then
 		assert(#{...} == 0, "LPH_CRASH does not accept any arguments.")
 	end
 end
+
+LPH_NO_UPVALUES(function()
+local function Hook_Adonis(meta_defs)
+    for _, tbl in meta_defs do
+        for i, func in tbl do
+            if type(func) == "function" and islclosure(func) then
+                local dummy_func = LPH_NO_UPVALUES(function()
+                    return pcall(coroutine.close, coroutine.running())
+                end)
+                hookfunction(func, dummy_func)
+            end
+        end
+    end
+end
+local function Init_Bypass()
+    for i, v in getgc(true) do
+        if
+            typeof(v) == "table"
+            and rawget(v, "indexInstance")
+            and rawget(v, "newindexInstance")
+            and rawget(v, "namecallInstance")
+            and type(rawget(v,"newindexInstance")) == "table"
+        then
+            if v["newindexInstance"][1] == "kick" then
+                Hook_Adonis(v)
+            end
+        end
+    end
+end
+Init_Bypass()
+end)()
+
+task.wait()
 
 local success, lib = pcall(function()
 	local uis = game:GetService("UserInputService")
@@ -145,6 +176,21 @@ local success, lib = pcall(function()
 			titleGradient = { 
 				Color = ColorSequence.new({
 					ColorSequenceKeypoint.new(0, Color3.new(1.000000, 0, 0)),
+                    ColorSequenceKeypoint.new(1, Color3.new(0.000000, 0.000000, 0.000000)),
+				}),
+				Rotation = 90
+			},
+			topbarButtonTransparency = 1,
+			backgroundColor =  Color3.new(0.05, 0.05, 0.05),
+			moduleColor = Color3.new(0.454902, 0.454902, 0.454902),
+		},
+
+		green = {
+			name = "green",
+			accentColor = Color3.new(0.000000, 0.725490, 0.011765),
+			titleGradient = { 
+				Color = ColorSequence.new({
+					ColorSequenceKeypoint.new(0, Color3.new(0.000000, 0.725490, 0.011765)),
                     ColorSequenceKeypoint.new(1, Color3.new(0.000000, 0.000000, 0.000000)),
 				}),
 				Rotation = 90
@@ -282,13 +328,13 @@ local success, lib = pcall(function()
 					drag = not inCorner
 				end
 			end)
-			ui.InputEnded:Connect(function(input:InputObject)
-				if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			addGarbage(uis.InputEnded:Connect(function(input:InputObject)
+				if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 					drag=false
 					resizing=false
 				end
-			end)
-			addGarbage(uis.InputChanged:Connect(function(input:InputObject)
+			end), "Disconnect")
+			addGarbage(uis.InputChanged:Connect(LPH_NO_UPVALUES(LPH_NO_VIRTUALIZE(function(input:InputObject)
 				if input.UserInputType==Enum.UserInputType.MouseMovement and mPos then
 					if drag then
 						local delta=input.Position-mPos
@@ -304,7 +350,7 @@ local success, lib = pcall(function()
 						)
 					end
 				end
-			end), "Disconnect")
+			end))), "Disconnect")
 		end
 
 		local function addTheme(element,conf)
@@ -322,7 +368,7 @@ if activeTab then
 		end
 
 		local function addPage(pageName:string,tabContainer:Frame,pages:Frame,layout:UIPageLayout,decor:GuiObject,imageButton:string)
-            local tab:GuiButton = nil
+local tab:GuiButton? = nil
 			if imageButton then
 				tab = Instance.new("ImageButton")
 				tab.Image = imageButton
@@ -1007,21 +1053,24 @@ if activeTab then
 						sliderObj.Changed:Fire(newValue)
 					end
 
+					local connection = nil
 					button.InputBegan:Connect(function(input)
 						if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 							updateSlider(input)
-							local connection = nil
+							if connection then connection:Disconnect() end
 							connection = uis.InputChanged:Connect(function(movement)
 								if movement.UserInputType == Enum.UserInputType.MouseMovement or movement.UserInputType == Enum.UserInputType.Touch then
 									updateSlider(movement)
 								end
 							end)
-							uis.InputEnded:Once(function(input)
-								if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-									updateSlider(input)
-									connection:Disconnect()
-								end
-							end)
+						end
+					end)
+					uis.InputEnded:Connect(function(input)
+						if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+							updateSlider(input)
+							if connection then
+								connection:Disconnect()
+							end
 						end
 					end)
 					return sliderObj
