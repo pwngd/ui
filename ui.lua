@@ -3,7 +3,6 @@
 local assert = assert
 local type = type
 local setfenv = setfenv
-
 if LPH_OBFUSCATED == nil then
 	LPH_ENCNUM = function(toEncrypt, ...)
 		assert(type(toEncrypt) == "number" and #{...} == 0, "LPH_ENCNUM only accepts a single constant double or integer as an argument.")
