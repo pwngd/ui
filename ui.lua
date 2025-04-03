@@ -1064,7 +1064,8 @@ local tab:GuiButton? = nil
 							end)
 						end
 					end)
-					uis.InputEnded:Connect(function(input)
+																
+					button.InputEnded:Connect(function(input)
 						if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 							updateSlider(input)
 							if connection then
@@ -1072,6 +1073,13 @@ local tab:GuiButton? = nil
 							end
 						end
 					end)
+					uis.InputEnded:Connect(function(input)
+						if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+if connection then
+								connection:Disconnect()
+							end
+																		end
+																	end)
 					return sliderObj
 				end
 				return moduleObj
