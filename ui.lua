@@ -1155,3 +1155,4 @@ if connection then
 	end
 	return lib
 end)
+return lib
