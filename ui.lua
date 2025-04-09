@@ -197,7 +197,7 @@ local success, lib = pcall(function()
 			topbarButtonTransparency = 1,
 			backgroundColor =  Color3.new(0.05, 0.05, 0.05),
 			moduleColor = Color3.new(0.454902, 0.454902, 0.454902),
-			cornerRadius = UDim2.new(0,8)
+			cornerRadius = UDim.new(0,8)
 		}
 	}
 
