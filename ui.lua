@@ -358,7 +358,7 @@ local success, lib = pcall(function()
 		end
 
 		local function activateTab(tab)
-if activeTab then
+			if activeTab then
 				activeTab.BackgroundColor3 = self.theme.backgroundColor
 			end
 			activeTab=tab
@@ -367,7 +367,7 @@ if activeTab then
 		end
 
 		local function addPage(pageName:string,tabContainer:Frame,pages:Frame,layout:UIPageLayout,decor:GuiObject,imageButton:string)
-local tab:GuiButton? = nil
+			local tab:GuiButton? = nil
 			if imageButton then
 				tab = Instance.new("ImageButton")
 				tab.Image = imageButton
@@ -780,6 +780,9 @@ local tab:GuiButton? = nil
 			canvasGroup.BorderSizePixel = 0
 			canvasGroup.ZIndex = 999999999
 			canvasGroup.Parent = gui
+			if self.theme.animations then
+				canvasGroup.GroupTransparency = 1
+			end
 
 			-- local aspectRatio:UIAspectRatioConstraint = Instance.new("UIAspectRatioConstraint")
 			-- aspectRatio.AspectRatio = self.aspectRatio
@@ -1109,8 +1112,46 @@ if connection then
 
 		self.SettingsPage = settingsPage
 
+		task.spawn(function()
+			if self.theme.animations then
+				local function spawnShine(parent)
+					local thing = Instance.new("Frame")
+					thing.Size = UDim2.fromScale(1, 1)
+					thing.BackgroundTransparency = 0
+					thing.BackgroundColor3 = Color3.new(1,1,1)
+	
+					local gradient = Instance.new("UIGradient")
+					local ti = TweenInfo.new(0.5*self.theme.animationSpeed, Enum.EasingStyle.Circular, Enum.EasingDirection.Out)
+					local offset1 = {Offset = Vector2.new(1.5, 0)}
+					local create = ts:Create(gradient, ti, offset1)
+					local startingPos = Vector2.new(-1, 0)
+					
+					gradient.Rotation = 45
+					gradient.Color = ColorSequence.new{
+						ColorSequenceKeypoint.new(0, Color3.new(1.000000, 1.000000, 1.000000)),
+						ColorSequenceKeypoint.new(1, Color3.new(1.000000, 1.000000, 1.000000)),
+					}
+					gradient.Transparency = NumberSequence.new{
+						NumberSequenceKeypoint.new(0, 1),
+						NumberSequenceKeypoint.new(0.5, 0.5),
+						NumberSequenceKeypoint.new(1, 1),
+					}
+					gradient.Offset = startingPos
+					gradient.Parent = thing
+					thing.ZIndex = 999999999
+					thing.Parent = parent
+	
+					create:Play()
+					create.Completed:Wait()
+					thing:Destroy()
+				end
+				
+				ts:Create(canvasGroup, TweenInfo.new(0.2*self.theme.animationSpeed), {GroupTransparency=0}):Play()
+				spawnShine(canvasGroup)
+			end
+		end)
+
 		return self
 	end
 	return lib
 end)
-return lib
