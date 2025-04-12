@@ -155,18 +155,21 @@ local success, lib = pcall(function()
 			gradient = { 
 				Color = ColorSequence.new({
 					ColorSequenceKeypoint.new(0, Color3.new(1, 1, 1)),
-                    ColorSequenceKeypoint.new(1, Color3.new(0.278431, 0.278431, 0.278431)),
+                    ColorSequenceKeypoint.new(1, Color3.new(0.443137, 0.443137, 0.443137)),
 				}),
 				Rotation = 45
 			},
 			titleGradient = { 
 				Color = ColorSequence.new({
 					ColorSequenceKeypoint.new(0, Color3.new(0.247059, 0.258824, 1.000000)),
-                    ColorSequenceKeypoint.new(1, Color3.new(0.003922, 0.047059, 0.333333)),
+                    ColorSequenceKeypoint.new(1, Color3.new(0.168627, 0.184314, 0.419608)),
 				}),
 				Rotation = 90
 			},
 			topbarButtonTransparency = 1,
+			strokeThickness = 3,
+			strokeTransparency = 1,
+			strokeColor = Color3.new(0.054902, 0.054902, 1.000000),
         },
 
 		red = {
