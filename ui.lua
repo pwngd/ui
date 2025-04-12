@@ -149,8 +149,9 @@ local success, lib = pcall(function()
 
         blue = {
 			name = "blue",
-            backgroundColor = Color3.new(0.015686, 0.015686, 0.470588),
-			accentColor = Color3.new(0.000000, 0.015686, 1.000000),
+            backgroundColor = Color3.new(0.094118, 0.101961, 0.560784),
+			moduleBorderColor = Color3.new(0.000000, 0.000000, 0.000000),
+			accentColor = Color3.new(0.164706, 0.180392, 1.000000),
 			topbarColor = Color3.new(0.000000, 0.000000, 0.000000),
 			gradient = { 
 				Color = ColorSequence.new({
