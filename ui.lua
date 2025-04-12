@@ -168,9 +168,10 @@ local success, lib = pcall(function()
 				Rotation = 90
 			},
 			topbarButtonTransparency = 1,
-			strokeThickness = 3,
+			strokeThickness = 1,
 			strokeTransparency = 0,
-			strokeColor = Color3.new(0.054902, 0.054902, 1.000000),
+			strokeColor = Color3.new(0.164706, 0.180392, 1.000000),
+			strokeLineJoinMode = Enum.LineJoinMode.Miter,
         },
 
 		red = {
