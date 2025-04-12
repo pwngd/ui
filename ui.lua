@@ -168,7 +168,7 @@ local success, lib = pcall(function()
 			},
 			topbarButtonTransparency = 1,
 			strokeThickness = 3,
-			strokeTransparency = 1,
+			strokeTransparency = 0,
 			strokeColor = Color3.new(0.054902, 0.054902, 1.000000),
         },
 
